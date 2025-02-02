@@ -1,14 +1,12 @@
 #include<stdio.h>
-int sum();
+void sum();
 void main()
 {
-	int s;
-	s=sum();
-	printf("sum is:%d",s);
+	sum();
 }
-int sum()
+void sum()
 {
-	int i,n,sum=0,a[50];
+	int a[50],i,n,sum=0;
 	printf("enter the number of elements:\n");
 	scanf("%d",&n);
 	printf("enter %d elements here:\n",n);
@@ -16,9 +14,9 @@ int sum()
 	{
 		scanf("%d",&a[i]);
 	}
-	for(i=0;i<n;i++)
+	for (i=0;i<n;i++)
 	{
 		sum=sum+a[i];
 	}
-	return sum;
+	printf("sum of enterd elements is:%d\n",sum);
 }

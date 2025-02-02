@@ -1,34 +1,42 @@
-#include<stdio.h>
+#include <stdio.h>
 #include<stdlib.h>
 void main()
 {
-	int n,i,*p,sum=0,n1,*q;
-	printf("enter the number of elements here:\n");
+	int n,i,*p,sum=0,*q,n1;
+	printf("enter size of elements:\n");
 	scanf("%d",&n);
-	printf("enter elements value for malloc\n");
 	p=(int*)malloc(n*sizeof(int));
 	for(i=0;i<n;i++)
 	{
 		scanf("%d",&p[i]);
 	}
-	for(i=0;i<n;i++)
+	for (i=0;i<n;i++)
+	{
+		printf("%d\n",p[i]);
+	}
+	for (i=0;i<n;i++)
 	{
 		sum=sum+p[i];
 	}
-	printf("sum is :%d\n",sum);
+	printf("sum is:%d\n",sum);
 
-	printf("enter the number of elements here:\n");
+	sum=0;
+	printf("enter size of elements:\n");
 	scanf("%d",&n1);
 	printf("enter elements value for calloc\n");
 	q=(int*)calloc(n,sizeof(int));
 	for(i=0;i<n1;i++)
 	{
-		scanf("%d",&n1);
+		scanf("%d",&q[i]);
 	}
-	sum=0;
-	for(i=0;i<n1;i++)
+	for (i=0;i<n1;i++)
 	{
-		sum=sum=q[i];
+		printf("%d\n",q[i]);
 	}
-	printf("sum is :%d\n",sum );
+	for (i=0;i<n1;i++)
+	{
+		sum=sum+q[i];
+	}
+	printf("sum is:%d\n",sum);
+
 }
