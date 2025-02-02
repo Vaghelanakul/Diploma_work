@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<stdio.h>
+void insert(int[],int,int,int);
+void main()
+{
+	int a[100],i,n,pos,value;
+	clrscr();
+	printf("enter the number of element\n");
+	scanf("%d",&n);
+	printf("enter %d elements here:\n",n);
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",&a[i]);
+	}
+	printf("enter the number of position to insert value\n");
+	scanf("%d",&pos);
+	printf("enter the value:\n");
+	scanf("%d",&value);
+	insert(a,n,pos,value);
+	getch();
+}
+void insert(int a[],int n,int pos,int value)
+{
+	int i;
+	for(i=n-1;i>=pos-1;i--)
+	{
+		a[i+1]=a[i];
+	}
+	a[pos-1]=value;
+	printf("after insert array is:\n");
+	for(i=0;i<=n;i++)
+	{
+		printf("%d\n",a[i]);
+	}
+}
+
+
+
+
+
+

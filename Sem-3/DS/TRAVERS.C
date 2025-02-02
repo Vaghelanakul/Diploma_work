@@ -1,0 +1,26 @@
+#include<stdio.h>
+#include<conio.h>
+void travers(int[],int,int);
+void main()
+{
+	int a[100],i,n;
+	clrscr();
+	printf("enter the number of elements:\n");
+	scanf("%d",&n);
+	printf("enter %d elements here:\n",n);
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",&a[i]);
+	}
+	travers(a,i,n);
+	getch();
+}
+void travers(int a[],int i,int n)
+{
+	printf("enterd elements are here:\n");
+	for(i=0;i<n;i++)
+	{
+		printf("%d\n",a[i]);
+	}
+
+}
