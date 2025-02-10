@@ -1,0 +1,4 @@
+﻿<asp:Label runat="server" ForeColor="red" BackColor="cyan" SkinID="red" />
+<asp:Label runat="server" ForeColor="Blue" SkinID="blue" />
+<asp:Label runat="server" ForeColor="Green" SkinID="green" />
+
