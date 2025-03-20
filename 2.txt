@@ -1,0 +1,172 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class ApiService {
+  static const String baseUrl = 'https://jsonplaceholder.typicode.com/users';
+
+  Future<List<Map<String, dynamic>>> fetchUsers() async {
+    final response = await http.get(Uri.parse(baseUrl));
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data);
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+
+  Future<Map<String, dynamic>> addUser(String name) async {
+    final response = await http.post(
+      Uri.parse(baseUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'name': name}),
+    );
+
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to add user');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateUser(int id, String name) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'id': id, 'name': name}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to update user');
+    }
+  }
+
+  Future<void> deleteUser(int id) async {
+    final response = await http.delete(Uri.parse('$baseUrl/$id'));
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete user');
+    }
+  }
+}
+
+
+-----------------------------------------------------------------------------------
+
+import 'package:flutter/material.dart';
+import 'api_service.dart';
+
+class UserScreen extends StatefulWidget {
+  @override
+  _UserScreenState createState() => _UserScreenState();
+}
+
+class _UserScreenState extends State<UserScreen> {
+  final ApiService apiService = ApiService();
+  List<Map<String, dynamic>> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsers();
+  }
+
+  Future<void> _loadUsers() async {
+    final apiUsers = await apiService.fetchUsers();
+    setState(() {
+      users = apiUsers;
+    });
+  }
+
+  Future<void> _addUser(String name) async {
+    await apiService.addUser(name);
+    _loadUsers();
+  }
+
+  Future<void> _updateUser(int id, String name) async {
+    await apiService.updateUser(id, name);
+    _loadUsers();
+  }
+
+  Future<void> _deleteUser(int id) async {
+    await apiService.deleteUser(id);
+    _loadUsers();
+  }
+
+  void _showUserDialog({int? id, String? name}) {
+    final nameController = TextEditingController(text: name ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(id == null ? 'Add User' : 'Edit User'),
+          content: TextField(controller: nameController, decoration: InputDecoration(labelText: 'Name')),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel')),
+            TextButton(
+              onPressed: () {
+                if (id == null) {
+                  _addUser(nameController.text);
+                } else {
+                  _updateUser(id, nameController.text);
+                }
+                Navigator.pop(context);
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('User Management')),
+      body: ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          final user = users[index];
+          return ListTile(
+            title: Text(user['name']),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(icon: Icon(Icons.edit), onPressed: () => _showUserDialog(id: user['id'], name: user['name'])),
+                IconButton(icon: Icon(Icons.delete), onPressed: () => _deleteUser(user['id'])),
+              ],
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showUserDialog(),
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+
+
+-----------------------------------------------------------------------------------
+
+import 'package:flutter/material.dart';
+import 'user_screen.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: UserScreen(),
+    );
+  }
+}
